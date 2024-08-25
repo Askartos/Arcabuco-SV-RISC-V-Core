@@ -1,4 +1,4 @@
-Arcabuco Project
+Arcabuco-SV Project
 ================
 Arcabuco-SV is a public implementation replicating using System verilog, the core architected and designed for my thesis project.
 
