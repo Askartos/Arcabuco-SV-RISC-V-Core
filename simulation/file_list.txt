@@ -1,0 +1,5 @@
+../src/rtl/arcabuco_core/arcabuco_core_pack.sv
+../src/rtl/arcabuco_system/arcabuco_system_config.sv
+../src/tb/arcabuco_tb.sv 
+../src/rtl/arcabuco_system/arcabuco_system.sv
+../src/rtl/arcabuco_core/alu.sv
