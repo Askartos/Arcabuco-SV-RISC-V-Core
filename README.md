@@ -1,7 +1,7 @@
 Arcabuco-SV Project
 ================
-Arcabuco-SV is a public implementation RISC-V-IM core, replicating using System Verilog the core architected and designed for my thesis project.
-
+Arcabuco-SV is a public implementation of the RISC-V-IM core, replicating the core architected and designed during my thesis project but using System Verilog.
+![image info](./docs/core_arch.PNG)
 ### Core Features
 - RISC-V IM
 - 5 Pipeline Stages
