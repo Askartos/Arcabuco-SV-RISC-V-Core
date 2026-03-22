@@ -1,6 +1,7 @@
 #!/bin/bash
 
-rm -f *.sim *.vcd
+./clean.sh
+
 #list all
 iverilog -g2012 -s arcabuco_system_tb -c file_list.txt -o arcabuco.sim
 #run simulation
