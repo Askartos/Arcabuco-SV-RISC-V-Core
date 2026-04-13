@@ -82,6 +82,9 @@ always_comb begin
     remu:begin
       reg_result = rem_res_unsig[31:0];
     end
+    default:begin
+      reg_result = 32'd0;
+    end
   endcase
 end
 

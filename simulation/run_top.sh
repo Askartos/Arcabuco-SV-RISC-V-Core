@@ -15,9 +15,9 @@ done
 verilator --binary \
   -f file_list.txt \
   --top arcabuco_system_tb \
-  -Wno-TIMESCALEMOD -Wno-fatal \
+  -Wno-TIMESCALEMOD -Wno-WIDTHEXPAND -Wno-fatal\
   $TRACE_FLAG
-
+  
 ./obj_dir/Varcabuco_system_tb
 
 if $GUI; then

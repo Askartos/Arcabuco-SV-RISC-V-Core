@@ -17,7 +17,7 @@ module arcabuco_system_tb;
   logic        arith_ovf;  
   logic        comp_res;
   t_muldiv_opcode  muldiv_selector=mul;  
-
+// verilator lint_off PINMISSING 
 arcabuco_execution ex_dut(
 .clock(clock),
 .rst(reset),
@@ -35,7 +35,7 @@ arcabuco_execution ex_dut(
 .fw1(1),    //forward value MEM TODO change to descriptive name
 .fw2(1)    //forward value WB  TODO change to descriptive name
 );
-
+// verilator lint_on PINMISSING 
   parameter CLOCK_PERIOD =50;
   always begin
       #(CLOCK_PERIOD/2);

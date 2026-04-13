@@ -65,8 +65,8 @@ endgenerate
 generate 
   if(MEM_SKIP)begin
     //avoids unnecesary bubble for memory transactions with known latency
-    assign memory_access  = rd[31:24] ==TCM_BASE[31:24] ? 1'b0  :
-                            rd[31:24] ==DPB_BASE[31:24] ? 1'b0  : 1'b1;
+    assign memory_access  = rd[31:24] ==TCM_BASE ? 1'b0  :
+                            rd[31:24] ==DPB_BASE ? 1'b0  : 1'b1;
   end else begin
     assign memory_access = 1'b1;
   end

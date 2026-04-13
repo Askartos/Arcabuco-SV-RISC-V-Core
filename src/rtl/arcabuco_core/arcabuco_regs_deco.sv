@@ -24,8 +24,21 @@ module arcabuco_regs_deco(
     output [31:0] imm_data_out,
     input  [31:0] in_pc,
     output [31:0] out_pc,
-	reg_access debug_regac
+	reg_access.slave debug_regac
 );
+
+	//Instruction decoder
+    arcabuco_decoder instruction_decoder (
+        .instruction_raw(instruction_raw),
+        .rd 			(rd_addr_out),
+        .rs1			(rs1_addr_out),
+        .rs2			(rs2_addr_out),
+        .imm			(imm_data_out),
+        .instruction_out(ctrl_cmd)
+    );
+	
+    //Register file
+
 	logic 		 rd_wen;
 	logic [31:0] rd_data;
 	logic [4:0]  addr_rd;
@@ -67,17 +80,6 @@ module arcabuco_regs_deco(
 			debug_regac.data_r = 32'd0;									
 		end	
 	end
-
-	//Instruction decoder
-    arcabuco_decoder instruction_decoder (
-        .instruction_raw(instruction_raw),
-        .rd 			(rd_addr_out),
-        .rs1			(rs1_addr_out),
-        .rs2			(rs2_addr_out),
-        .imm			(imm_data_out),
-        .instruction_out(ctrl_cmd)
-    );
-	
 	
 	// Early jump or branch target address calculation
 	wire [31:0] op1;

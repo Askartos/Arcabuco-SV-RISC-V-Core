@@ -27,7 +27,7 @@ always_comb begin
       if(in_1[31]==1'b0)
         arith_res = in_1>>in_2[4:0];
       else
-        arith_res = (in_1>>in_2[4:0]) | (32'hFFFF_FFFF << (32'd32-in_2[4:0])) ;
+        arith_res = (in_1>>in_2[4:0]) | (32'hFFFF_FFFF << (6'd32-in_2[4:0])) ;
     end
     alu_add:begin //Addition
       arith_res = add_res[31:0];
