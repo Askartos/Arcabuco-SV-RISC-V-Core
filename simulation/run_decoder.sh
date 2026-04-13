@@ -3,13 +3,14 @@
 ./clean.sh 
 
 #list all
-iverilog -g2012 -s arcabuco_decoder_tb \
+verilator --binary \
 ../src/rtl/arcabuco_core/arcabuco_core_pack.sv \
 ../src/rtl/arcabuco_core/arcabuco_decoder.sv \
 ../src/tb/decoder_tb.sv \
--o decoder.sim
+--top arcabuco_decoder_tb -Wno-TIMESCALEMOD --trace \
+
 #run simulation
-./decoder.sim
+./obj_dir/Varcabuco_decoder_tb 
 #if any argument open  gui
 if [ ! -z $1 ]; then
   gtkwave decoder.vcd

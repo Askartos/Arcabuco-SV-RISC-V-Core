@@ -1,4 +1,4 @@
 #!/bin/bash
 
-rm -f *.sim *.vcd
+rm -rf *.sim *.vcd obj*
 

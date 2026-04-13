@@ -9,10 +9,10 @@ verilator --binary \
 ../src/rtl/arcabuco_core/regfile.sv \
 ../src/rtl/arcabuco_core/arcabuco_regs_deco.sv \
 ../src/tb/regs_decoder_tb.sv \
---top arcabuco_decoder_tb -Wno-TIMESCALEMOD\
+--top arcabuco_decoder_tb -Wno-TIMESCALEMOD --trace \
 
 #run simulation
-./decoder.sim
+./obj_dir/Varcabuco_decoder_tb 
 #if any argument open  gui
 if [ ! -z $1 ]; then
   gtkwave decoder.vcd

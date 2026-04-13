@@ -1,11 +1,11 @@
 import arcabuco_core_pack::*;
 module arcabuco_decoder (
-    input  logic        [31:0] instruction_raw,
-    output logic        [4:0]  rd,
-    output logic        [4:0]  rs1,
-    output logic        [4:0]  rs2,
-    output logic signed [31:0] imm,
-    output t_instruction       instruction_out
+    input  logic  [31:0] instruction_raw,
+    output logic  [4:0]  rd,
+    output logic  [4:0]  rs1,
+    output logic  [4:0]  rs2,
+    output logic  [31:0] imm,
+    output t_instruction instruction_out
 );
 
 
@@ -28,8 +28,10 @@ module arcabuco_decoder (
     assign rs2 = instruction_raw[24:20];
 
     // --------------------------------------------------
-    // Combinational decoder
+    // Combinational decoder 
     // --------------------------------------------------
+    
+// verilator lint_off CASEINCOMPLETE 
     always_comb begin
         instruction_out = inst_invalid;
         imm   = 32'sd0;
@@ -48,16 +50,16 @@ module arcabuco_decoder (
 
             7'h6F: begin // JAL
                 instruction_out = inst_jal;
-                imm   = $signed({instruction_raw[31], instruction_raw[19:12], instruction_raw[20], instruction_raw[30:21], 1'b0});
+                imm   = {{11{instruction_raw[31]}},instruction_raw[31], instruction_raw[19:12], instruction_raw[20], instruction_raw[30:21], 1'b0};
             end
 
             7'h67: begin // JALR
-                imm   = $signed(instruction_raw[31:20]);
+                imm   = {{20{instruction_raw[31]}},instruction_raw[31:20]};
                 instruction_out = inst_jalr;
             end
 
             7'h63: begin // B-Type
-                imm = $signed({instruction_raw[31], instruction_raw[7], instruction_raw[30:25], instruction_raw[11:8], 1'b0});
+                imm = {{19{instruction_raw[31]}},instruction_raw[31], instruction_raw[7], instruction_raw[30:25], instruction_raw[11:8], 1'b0};
                 case (funct3)
                     3'h0: instruction_out = inst_beq;
                     3'h1: instruction_out = inst_bne;
@@ -69,7 +71,7 @@ module arcabuco_decoder (
             end
 
             7'h03: begin // LOAD
-                imm = $signed(instruction_raw[31:20]);
+                imm   = {{20{instruction_raw[31]}},instruction_raw[31:20]};
                 case (funct3)
                     3'h0: instruction_out = inst_lb;
                     3'h1: instruction_out = inst_lh;
@@ -80,7 +82,7 @@ module arcabuco_decoder (
             end
 
             7'h23: begin // STORE
-                imm = $signed({instruction_raw[31:25], instruction_raw[11:7]});
+                imm = {{20{instruction_raw[31]}},instruction_raw[31:25], instruction_raw[11:7]};
                 case (funct3)
                     3'h0: instruction_out = inst_sb;
                     3'h1: instruction_out = inst_sh;
@@ -89,7 +91,7 @@ module arcabuco_decoder (
             end
 
             7'h13: begin // OP-IMM
-                imm = $signed(instruction_raw[31:20]);
+                imm   = {{20{instruction_raw[31]}},instruction_raw[31:20]};
 
                 case (funct3)
                     3'h0: instruction_out = inst_addi;
@@ -99,11 +101,11 @@ module arcabuco_decoder (
                     3'h6: instruction_out = inst_ori;
                     3'h7: instruction_out = inst_andi;
                     3'h1: begin
-                        imm   = $signed(instruction_raw[24:20]);
+                        imm   = {{27{instruction_raw[24]}},instruction_raw[24:20]};//TODO check this could be optimized
                         instruction_out = inst_slli;
                     end
                     3'h5: begin
-                        imm = $signed(instruction_raw[24:20]);
+                        imm   = {{27{instruction_raw[24]}},instruction_raw[24:20]};//TODO check this could be optimized
                         case (funct7)
                             7'h00: instruction_out = inst_srli;
                             7'h20: instruction_out = inst_srai;
@@ -160,7 +162,7 @@ module arcabuco_decoder (
             end
 
             7'h73: begin // CSR
-                imm = $signed({20'b0, instruction_raw[31:20]});
+                imm = {20'b0, instruction_raw[31:20]};
                 case (funct3)
                     3'h0: instruction_out = inst_ebreak;
                     3'h1: instruction_out = inst_csrrw;
@@ -174,5 +176,5 @@ module arcabuco_decoder (
 
         endcase
     end
-
+// verilator lint_on CASEINCOMPLETE 
 endmodule

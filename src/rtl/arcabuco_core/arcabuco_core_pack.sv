@@ -84,5 +84,19 @@ typedef enum logic [5:0] {
     inst_remu    = 6'd52
 
 } t_instruction;
-
 endpackage
+
+interface reg_access #(parameter DATA_W=32,
+                       parameter ADDR_W=32) ();
+    logic [DATA_W-1:0] data_w,data_r;
+    logic [ADDR_W-1:0] addr;
+    logic              ren, wen;
+    modport master(
+    input data_r,
+    output addr,data_w,wen,ren
+    );
+    modport slave(
+    output data_r,
+    input addr,data_w,wen,ren
+    );
+endinterface
