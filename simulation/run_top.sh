@@ -2,16 +2,24 @@
 
 ./clean.sh
 
+TRACE_FLAG=""
+GUI=false
 
-#list all
+for arg in "$@"; do
+  if [[ "$arg" == "-gui" ]]; then
+    TRACE_FLAG="--trace"
+    GUI=true
+  fi
+done
+
 verilator --binary \
--f file_list.txt \
---top arcabuco_system_tb -Wno-TIMESCALEMOD -Wno-fatal --trace \
+  -f file_list.txt \
+  --top arcabuco_system_tb \
+  -Wno-TIMESCALEMOD -Wno-fatal \
+  $TRACE_FLAG
 
-#run simulation
-./obj_dir/Varcabuco_system_tb 
-#if any argument open  gui
-if [ ! -z $1 ]; then
+./obj_dir/Varcabuco_system_tb
+
+if $GUI; then
   gtkwave arcabuco_sim.vcd
 fi
-
