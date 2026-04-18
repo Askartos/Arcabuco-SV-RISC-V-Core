@@ -1,5 +1,5 @@
 import arcabuco_core_pack::*;
-module arcabuco_decoder (
+module riscv_decoder (
     input  logic  [31:0] instruction_raw,
     output logic  [4:0]  rd,
     output logic  [4:0]  rs1,

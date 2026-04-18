@@ -84,6 +84,15 @@ typedef enum logic [5:0] {
     inst_remu    = 6'd52
 
 } t_instruction;
+
+typedef struct packed {
+    logic        mux1_select;   // 1-bit
+    logic [1:0]  mux2_select;   // 2-bit
+    logic        jump;          // asserted when JAL or JALR
+    logic        en;
+} if_ctrl_t;
+
+
 endpackage
 
 interface reg_access #(parameter DATA_W=32,

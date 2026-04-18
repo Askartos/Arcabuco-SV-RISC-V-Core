@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
 
-module arcabuco_decoder_tb;
+module riscv_decoder_tb;
 
     initial begin
         $dumpfile("decoder.vcd");
-        $dumpvars(0,arcabuco_decoder_tb);
+        $dumpvars(0,riscv_decoder_tb);
         $display("decoder sim starts");
     end
 

@@ -28,7 +28,7 @@ module arcabuco_regs_deco(
 );
 
 	//Instruction decoder
-    arcabuco_decoder instruction_decoder (
+    riscv_decoder instruction_decoder (
         .instruction_raw(instruction_raw),
         .rd 			(rd_addr_out),
         .rs1			(rs1_addr_out),
