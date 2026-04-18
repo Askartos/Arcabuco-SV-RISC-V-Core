@@ -92,11 +92,38 @@ typedef struct packed {
     logic        en;
 } if_ctrl_t;
 
+typedef struct packed {
+    logic        wen        ;
+    logic  [1:0] mux1_select;
+    logic        mux2_select;
+    logic        mux4_select;
+    logic        mux5_select;
+} id_ctrl_t;
+
+typedef struct packed {
+t_alu_opcode     alu_selector;
+t_muldiv_opcode  muldiv_selector;
+logic            muldiv_en;
+logic  [1:0]     mux1_select; 
+logic  [1:0]     mux2_select;
+logic            mux3_select;
+} ex_ctrl_cmd_t;
+
+typedef struct packed {
+logic comp_res;
+logic mul_busy;
+logic memory_access;
+} ex_ctrl_rsp_t;
+
+typedef struct packed {
+    logic [1:0]  write;//TODO add enum here
+    logic [2:0]  read; //TODO add enum here
+} mem_ctrl_t;
 
 endpackage
 
-interface reg_access #(parameter DATA_W=32,
-                       parameter ADDR_W=32) ();
+interface reg_if #( parameter DATA_W=32,
+                    parameter ADDR_W=32) ();
     logic [DATA_W-1:0] data_w,data_r;
     logic [ADDR_W-1:0] addr;
     logic              ren, wen;
@@ -109,3 +136,31 @@ interface reg_access #(parameter DATA_W=32,
     input addr,data_w,wen,ren
     );
 endinterface
+
+interface mem_if #( parameter DATA_W=32,
+                    parameter ADDR_W=32) ();
+    logic              valid;
+    logic              abort;
+    logic              we;
+    logic [1:0]        size;
+    logic [ADDR_W-1:0] addr;
+    logic [DATA_W-1:0] data_w;
+    logic [DATA_W-1:0] data_r;
+    logic              ready;
+
+    // Master drives request, reads response
+    modport master (
+        output valid, abort, we, addr, size, data_w,
+        input  data_r, ready
+    );
+
+    // Slave receives request, drives response
+    modport slave (
+        input  valid, abort, we, addr, size, data_w,
+        output data_r, ready
+    );
+
+endinterface
+
+
+

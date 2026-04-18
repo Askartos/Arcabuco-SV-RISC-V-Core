@@ -3,13 +3,8 @@ module arcabuco_regs_deco(
 	input   logic clock,
 	input   logic rst_n,
 	//control interface
-	input    	 ctrl_wen        ,
-	input  [1:0] ctrl_mux1_select,
-	input  		 ctrl_mux2_select,
-	input   	 ctrl_mux4_select,
-	input   	 ctrl_mux5_select,
-	output [5:0] ctrl_cmd        ,
-
+	input  id_ctrl_t     ctrl_in,
+	output t_instruction ctrl_cmd,
 	//registers IO
 	input  [4:0]  rd_waddr    ,//waddr
 	input  [31:0] rd_data_in  ,//rd
@@ -24,7 +19,7 @@ module arcabuco_regs_deco(
     output [31:0] imm_data_out,
     input  [31:0] in_pc,
     output [31:0] out_pc,
-	reg_access.slave debug_regac
+	reg_if.slave debug_regac
 );
 
 	//Instruction decoder
@@ -72,7 +67,7 @@ module arcabuco_regs_deco(
 			rs2_dbg_mux        = 32'd0;	// TODO optimize this mux might not be needed
 			debug_regac.data_r = rs2_data_r;		
 		end else begin
-			rd_wen             = ctrl_wen;
+			rd_wen             = ctrl_in.wen;
 			rd_data            = rd_data_in;
 			addr_rd            = rd_waddr;
 			addr_rs2           = rs2_addr_out;
@@ -84,19 +79,19 @@ module arcabuco_regs_deco(
 	// Early jump or branch target address calculation
 	wire [31:0] op1;
 	wire [31:0] op2;
-	assign op1 = ctrl_mux1_select == 2'd1 ? {imm_data_out[31:1],1'b0} : imm_data_out;
-	assign op2 = ctrl_mux2_select == 1'd1 ? {rs1_data_r[31:1],1'b0} : in_pc		;
-	assign out_pc = op1 + op2;
+	assign op1 			= ctrl_in.mux1_select == 2'd1 ? {imm_data_out[31:1],1'b0} : imm_data_out;
+	assign op2 			= ctrl_in.mux2_select == 1'd1 ? {rs1_data_r[31:1],1'b0} : in_pc		;
+	assign out_pc 		= op1 + op2;
 	
 	// Output operands	logic
-	assign rs1_data_out = ctrl_mux4_select ? rs1_data_r  : out_pc;
-	assign rs2_data_out = ctrl_mux5_select ? rs2_dbg_mux : in_pc + 32'd4;
+	assign rs1_data_out = ctrl_in.mux4_select ? rs1_data_r  : out_pc;
+	assign rs2_data_out = ctrl_in.mux5_select ? rs2_dbg_mux : in_pc + 32'd4;
 
 endmodule
 //Removed feedforward paths
 /*
-	io.ctrl.rs1:=rs1_addr_out
-	io.ctrl.rs2:=rs2_addr_out
+	io.ctrl_in.rs1:=rs1_addr_out
+	io.ctrl_in.rs2:=rs2_addr_out
 	io.A:=io.in_pc 
 */
 // 	val fw1 			= Input(UInt(nbits.W))//unused

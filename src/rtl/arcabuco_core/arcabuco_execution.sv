@@ -2,17 +2,10 @@ import arcabuco_core_pack::*;
 module arcabuco_execution(
 input   logic clock,
 input   logic rst,
-//CONTROL IFX TODO convert to a sv interface 
-input  t_alu_opcode     alu_selector,
-input  t_muldiv_opcode  muldiv_selector,
-input  logic            muldiv_en,
-input  logic  [1:0]     mux1_select, 
-input  logic  [1:0]     mux2_select,
-input  logic            mux3_select,
-output logic            comp_res,
-output logic            mul_busy,
-output logic            memory_access,
-//END OF CONTROL IFX 
+//CONTROL IFX 
+input  ex_ctrl_cmd_t    ctrl_in,
+output ex_ctrl_rsp_t    ctrl_out,
+//DATAPATH SIGNALS
 input  logic [31:0] rs1,    //register operand 1
 input  logic [31:0] rs2,    //register operand 2
 input  logic [31:0] imm,    //immidiate value
@@ -26,35 +19,35 @@ logic [31:0] mux1;
 logic [31:0] mux2;
 logic [31:0] mux3;
 //operand 1 selection
-assign mux1 = mux1_select==2'd3 ? fw1 :
-              mux1_select==2'd2 ? fw2 : rs1;
+assign mux1 = ctrl_in.mux1_select==2'd3 ? fw1 :
+              ctrl_in.mux1_select==2'd2 ? fw2 : rs1;
 //operand 2 selection
-assign mux2 = mux2_select==2'd3 ? fw1 :
-              mux2_select==2'd2 ? fw2 : rs2;
+assign mux2 = ctrl_in.mux2_select==2'd3 ? fw1 :
+              ctrl_in.mux2_select==2'd2 ? fw2 : rs2;
 //immidiate selector
-assign mux3 = mux3_select==1'd1 ? mux2: imm;
+assign mux3 = ctrl_in.mux3_select==1'd1 ? mux2: imm;
 
-alu alu(
-  .selector (alu_selector),
+riscv_alu alu(
+  .selector (ctrl_in.alu_selector),
   .in_1     (mux1),
   .in_2     (mux3),
   .arith_res(rd),
   .arith_ovf(),  //TODO check if not used ?
-  .comp_res (comp_res)      
+  .comp_res (ctrl_out.comp_res)      
 );
 
 //muldiv
 generate 
   if(HAVE_MUL)begin
     muldiv muldiv(
-      .clock   (clock),
-      .rst     (rst),
-      .selector (muldiv_selector),
+      .clock    (clock),
+      .rst      (rst),
+      .selector (ctrl_in.muldiv_selector),
       .in_1     (mux1),
       .in_2     (mux2),
-      .enable   (muldiv_en),
+      .enable   (ctrl_in.muldiv_en),
       .result   (mul_res),
-      .busy     (mul_busy)   
+      .busy     (ctrl_out.mul_busy)   
     );
   end else begin
     assign mul_res =32'd0;
@@ -65,10 +58,10 @@ endgenerate
 generate 
   if(MEM_SKIP)begin
     //avoids unnecesary bubble for memory transactions with known latency
-    assign memory_access  = rd[31:24] ==TCM_BASE ? 1'b0  :
-                            rd[31:24] ==DPB_BASE ? 1'b0  : 1'b1;
+    assign ctrl_out.memory_access  =  rd[31:24] ==TCM_BASE ? 1'b0  :
+                                      rd[31:24] ==DPB_BASE ? 1'b0  : 1'b1;
   end else begin
-    assign memory_access = 1'b1;
+    assign ctrl_out.memory_access = 1'b1;
   end
 endgenerate
 

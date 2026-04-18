@@ -1,5 +1,5 @@
 import arcabuco_core_pack::*;
-module alu(
+module riscv_alu(
 input t_alu_opcode selector,
 input  logic [31:0] in_1,
 input  logic [31:0] in_2,
