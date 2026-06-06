@@ -1,7 +1,7 @@
 import arcabuco_core_pack::*;
 module arcabuco_execution(
-input   logic clock,
-input   logic rst,
+input   logic clk,
+input   logic rst_n,
 //CONTROL IFX 
 input  ex_ctrl_cmd_t    ctrl_in,
 output ex_ctrl_rsp_t    ctrl_out,
@@ -40,8 +40,8 @@ riscv_alu alu(
 generate 
   if(HAVE_MUL)begin
     muldiv muldiv(
-      .clock    (clock),
-      .rst      (rst),
+      .clk      (clk),
+      .rst_n    (rst_n),
       .selector (ctrl_in.muldiv_selector),
       .in_1     (mux1),
       .in_2     (mux2),
@@ -51,7 +51,7 @@ generate
     );
   end else begin
     assign mul_res =32'd0;
-    assign mul_busy=1'b0;
+    assign ctrl_out.mul_busy=1'b0;
   end
 endgenerate
 
@@ -67,15 +67,4 @@ endgenerate
 
 //EX TO MEM OUTPUTS
 assign wr_data =mux2;
-/*
-List of removed feedfoward paths 
-  io.ctrl.rd_addr:=io.in_addr_rd
-  io.ctrl.r1_addr:=io.in_addr_r1
-  io.ctrl.r2_addr:=io.in_addr_r2
-  io.addr_rd     :=io.in_addr_rd
-  io.B           :=io.in_pc //sh
-  //--------------- riscv-formal rs1 and rs2 Interface Signals ---------------//
-  io.ALU_in1 := ALU.io.in1
-  io.ALU_in2 := tmp_in2
-*/
 endmodule

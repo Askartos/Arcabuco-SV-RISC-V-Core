@@ -1,7 +1,7 @@
 import arcabuco_core_pack::*;
 module muldiv (
-input   logic clock,
-input   logic rst,
+input   logic clk,
+input   logic rst_n,
 input   t_muldiv_opcode selector,
 input   logic           enable,
 input   logic [31:0]    in_1,
@@ -13,8 +13,8 @@ output  logic           busy
 logic [31:0] in_1_buff,in_2_buff;
 generate 
   if(MUL_BUFF)begin
-    always_ff @(posedge clock or posedge rst) begin
-      if(rst) begin
+    always_ff @(posedge clk or negedge rst_n) begin
+      if(!rst_n) begin
         in_1_buff <= '0;
         in_2_buff <= '0;
       end else begin
@@ -99,8 +99,8 @@ generate
 endgenerate
 
 assign busy = enable && !done;
-always_ff @(posedge clock or posedge rst) begin : proc_counter
-  if(rst) begin
+always_ff @(posedge clk or negedge rst_n) begin : proc_counter
+  if(!rst_n) begin
     counter <= '0;
   end else if(busy) begin
     counter <= counter+1;
@@ -112,8 +112,8 @@ end
 // Define a shift register array with MUL_STAGES
 logic [31:0] pipeline [MUL_STAGES-1:0];
 
-always_ff @(posedge clock or posedge rst) begin
-  if (rst) begin
+always_ff @(posedge clk or negedge rst_n) begin
+  if(!rst_n) begin
     // Reset all MUL_STAGES of the shift register
     for (int i = 0; i < MUL_STAGES; i++) begin
       pipeline[i] <= 32'd0;

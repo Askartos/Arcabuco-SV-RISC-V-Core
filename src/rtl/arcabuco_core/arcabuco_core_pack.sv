@@ -5,10 +5,11 @@ typedef enum logic [3:0]{ alu_sll, alu_srl,  alu_sra, alu_add, alu_sub, alu_xor,
 
 typedef enum logic [3:0]{ mul, mulh, mulhsu, mulhu, div, divu, rem, remu} t_muldiv_opcode;
 
-localparam [0:0] MEM_SKIP=1'b1;
-localparam [0:0] HAVE_MUL=1'b1;
-localparam [0:0] MUL_BUFF=1'b1;
-localparam int 	 MUL_STAGES=2;
+localparam [31:0] INIT_PC    =  '0;
+localparam [0:0]  MEM_SKIP   = 1'b1;
+localparam [0:0]  HAVE_MUL   = 1'b1;
+localparam [0:0]  MUL_BUFF   = 1'b1;
+localparam int    MUL_STAGES = 2;
 //decided to support a maximum of 256 base addr in the system
 //most significant byte is destinated for base addr
 localparam [7:0] TCM_BASE=8'h01;//Scratchpad base addr 32'h01_000000
@@ -101,6 +102,20 @@ typedef struct packed {
 } id_ctrl_t;
 
 typedef struct packed {
+   logic [4:0]  rd_addr_out ;
+   logic [4:0]  rs1_addr_out;
+   logic [4:0]  rs2_addr_out;
+} rf_addrs_t;
+
+typedef struct packed {
+   logic [31:0]   rs1_data_out;
+   logic [31:0]   rs2_data_out;
+   logic [31:0]   imm_data_out;
+   rf_addrs_t     id_ctrl_out;
+} id_ex_pipe_t;
+
+
+typedef struct packed {
 t_alu_opcode     alu_selector;
 t_muldiv_opcode  muldiv_selector;
 logic            muldiv_en;
@@ -119,6 +134,14 @@ typedef struct packed {
     logic [1:0]  write;//TODO add enum here
     logic [2:0]  read; //TODO add enum here
 } mem_ctrl_t;
+
+typedef struct packed {
+logic if_flush;
+logic if_en;
+logic mem_wb_stall;
+logic ex_mem_stall;
+} pipe_ctrl_t;
+
 
 endpackage
 

@@ -27,10 +27,5 @@ module arcabuco_write_back (
             out = mul_out;                 // MUL out
         end
     end
-/*
-List of removed feedfoward paths :
-    io.out_addr_rd:=io.addr_rd
-    io.ctrl.rd_addr:=io.addr_rd
-*/
 
 endmodule

@@ -1,5 +1,5 @@
 module regfile(
-	input		   clock,rst_n,
+	input		   clk,rst_n,
 	input  		   rd_wen    ,
 	input  [31:0]  rd_data   ,
 	input  [4:0]   addr_rd   ,
@@ -12,7 +12,7 @@ module regfile(
 
 	logic [31:0] regfile [31:1];
 	//registers write logic
-	always_ff @(posedge clock or negedge rst_n) begin
+	always_ff @(posedge clk or negedge rst_n) begin
 		if(rd_wen &&  (addr_rd!=5'd0) )begin
 			regfile[addr_rd] <= rd_data;
 		end

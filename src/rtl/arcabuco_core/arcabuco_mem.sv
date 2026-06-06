@@ -5,45 +5,15 @@ module arcabuco_mem (
     input  mem_ctrl_t ctrl,
     output logic      ctrl_done,
 
-    input  logic [31:0] IM_addr,
-    output logic [31:0] IM_data,
 
     input  logic [31:0] in_ALUdata,
     input  logic [31:0] in_data,
 
     output logic signed [31:0] out_data,
 
-    input  logic debug_halt,
-    output logic IF_halt,
-
-    // Interfaces
-    mem_if.master imem,
     mem_if.master dmem
 );
 
-    // ----------------------------------------
-    // IMEM logic
-    // ----------------------------------------
-
-    logic [31:0] im_addr_dly;
-
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n)
-            im_addr_dly <= '0;
-        else //TODO evaluate latching this addr if(imem.ready) to avoid unwanted aborts 
-            im_addr_dly <= IM_addr;
-    end
-
-    assign imem.valid  = 1'b1;
-    assign imem.abort  = (~imem.ready) & (IM_addr != im_addr_dly);
-    assign imem.we     = 1'b0;
-    assign imem.addr   = IM_addr;
-    assign imem.size   = 2'd2; // 32-bit
-    assign imem.data_w = '0;
-
-    assign IF_halt = ~imem.ready;
-
-    assign IM_data = (debug_halt | ~imem.ready) ? 32'h13 : imem.data_r;
 
     // ----------------------------------------
     // DMEM logic
@@ -76,7 +46,7 @@ module arcabuco_mem (
             addr_LSB_R <= in_ALUdata[1:0];
         end
     end
-
+    //TODO revist these they seem to be not working in sv
     always_comb begin
         case (pre_read)
             3'd1: // lb
@@ -86,10 +56,10 @@ module arcabuco_mem (
                 out_data = $signed((readed_d >> (addr_LSB_R[1] << 4)) & 16'hFFFF);
 
             3'd4: // lbu
-                out_data = {24'b0, (readed_d >> (addr_LSB_R << 3)) & 8'hFF};
+                out_data = {24'b0, 8'(readed_d >> (addr_LSB_R << 3)) & 8'hFF};
 
             3'd5: // lhu
-                out_data = {16'b0, (readed_d >> (addr_LSB_R[1] << 4)) & 16'hFFFF};
+                out_data = {16'b0, 16'(readed_d >> (addr_LSB_R[1] << 4)) & 16'hFFFF};
 
             3'd3: // lw
                 out_data = $signed(readed_d);
@@ -100,9 +70,3 @@ module arcabuco_mem (
     end
 
 endmodule
-/* removed feedforward paths
-    io.out_addr_rd  := io.addr_rd
-    io.out_ALUdata  := io.in_ALUdata    
-    io.out_fwd1     := io.in_ALUdata
-    io.ctrl.rd_addr := io.addr_rd
-*/

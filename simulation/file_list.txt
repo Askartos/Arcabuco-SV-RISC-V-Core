@@ -1,7 +1,12 @@
 ../src/rtl/arcabuco_core/arcabuco_core_pack.sv
-../src/rtl/arcabuco_core/arcabuco_execution.sv
-../src/rtl/arcabuco_system/arcabuco_system_config.sv
-../src/rtl/arcabuco_system/arcabuco_system.sv
+../src/rtl/arcabuco_core/riscv_decoder.sv
 ../src/rtl/arcabuco_core/riscv_alu.sv
-../src/rtl/arcabuco_core/muldiv.sv  
-../src/tb/arcabuco_tb.sv 
+../src/rtl/arcabuco_core/muldiv.sv
+../src/rtl/arcabuco_core/regfile.sv
+../src/rtl/arcabuco_core/arcabuco_execution.sv
+../src/rtl/arcabuco_core/arcabuco_ifetch.sv
+../src/rtl/arcabuco_core/arcabuco_mem.sv
+../src/rtl/arcabuco_core/arcabuco_regs_deco.sv
+../src/rtl/arcabuco_core/arcabuco_write_back.sv
+../src/rtl/arcabuco_core/arcabuco_datapath.sv
+../src/tb/datapath_tb.sv
