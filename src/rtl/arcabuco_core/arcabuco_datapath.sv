@@ -8,8 +8,8 @@ input  id_ctrl_t     id_ctrl,
 output t_instruction id_ctrl_cmd,
 output rf_addrs_t    id_addrs_out,
 output rf_addrs_t    ex_addrs_out,
-input  ex_ctrl_cmd_t ex_ctrl_in,
-output ex_ctrl_rsp_t ex_ctrl_out,
+input  ex_ctrl_cmd_t ex_ctrl_cmd,
+output ex_ctrl_rsp_t ex_ctrl_rsp,
 input  mem_ctrl_t    mem_ctrl,
 output logic         mem_ctrl_done,
 output logic [4:0]   mem_addr_rd,
@@ -101,8 +101,8 @@ mem_if.master        dmem
    arcabuco_execution inst_ex(
       .clk     (clk),
       .rst_n   (rst_n),
-      .ctrl_in (ex_ctrl_in),
-      .ctrl_out(ex_ctrl_out),
+      .ctrl_in (ex_ctrl_cmd),
+      .ctrl_out(ex_ctrl_rsp),
       .rs1     (id_ex_pipe_out.rs1_data_out),    //register operand 1
       .rs2     (id_ex_pipe_out.rs2_data_out),    //register operand 2
       .imm     (id_ex_pipe_out.imm_data_out),    //immidiate value

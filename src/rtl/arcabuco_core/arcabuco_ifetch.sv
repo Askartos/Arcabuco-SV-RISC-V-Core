@@ -33,6 +33,13 @@ module arcabuco_ifetch (
     // ----------------------------------------
     // Next pc combinational logic 
     // ----------------------------------------
+
+    wire        mux1_select= ctrl.mux1_select;   // 1-bit
+    wire [1:0]  mux2_select= ctrl.mux2_select;   // 2-bit
+    wire        jump       = ctrl.jump       ;          // asserted when JAL or JALR
+    wire        en         = ctrl.en         ;
+
+
     always_comb begin
         if(dbg_rst)begin //debug rst
             next_pc = INIT_PC;
@@ -45,7 +52,7 @@ module arcabuco_ifetch (
                 next_pc = B;
             end
         end else if(ctrl.en) begin  // Usual pc behavior enable
-            if (ctrl.mux1_select == 1'b0) begin// Jump-controlled PC (mux1)
+            if (ctrl.mux1_select == 1'b1) begin// Jump-controlled PC (mux1)
                 next_pc = in_pc;
             end else begin // PC+4 increment logic
                 if(!if_halt) //debuger  + mem halt

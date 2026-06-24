@@ -1,0 +1,39 @@
+[*]
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Wed Jun 24 21:54:55 2026
+[*]
+[dumpfile] "/home/askartos/Arcabuco-SV-RISC-V-Core/simulation/arcabuco_sim.vcd"
+[dumpfile_mtime] "Wed Jun 24 21:53:12 2026"
+[dumpfile_size] 31477
+[savefile] "/home/askartos/Arcabuco-SV-RISC-V-Core/simulation/signals.swf.gtkw"
+[timestart] 0
+[size] 2560 1353
+[pos] -27 -24
+*-5.056897 85 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] arcabuco_tb.
+[treeopen] arcabuco_tb.dut.
+[treeopen] arcabuco_tb.dut.inst_controlpath.
+[treeopen] arcabuco_tb.dut.inst_datapath.
+[treeopen] arcabuco_tb.dut.inst_datapath.inst_deco.
+[sst_width] 297
+[signals_width] 337
+[sst_expanded] 1
+[sst_vpaned_height] 911
+@28
+arcabuco_tb.dut.inst_datapath.ifetch_inst.clk
+arcabuco_tb.dut.inst_datapath.ifetch_inst.rst_n
+@22
+arcabuco_tb.dut.inst_datapath.ifetch_inst.crnt_pc[31:0]
+arcabuco_tb.dut.inst_datapath.ifetch_inst.next_pc[31:0]
+@28
+arcabuco_tb.dut.inst_datapath.ifetch_inst.dbg_rst
+arcabuco_tb.dut.inst_datapath.ifetch_inst.jtomtvec
+arcabuco_tb.dut.inst_datapath.ifetch_inst.mux2_select[1:0]
+arcabuco_tb.dut.inst_datapath.ifetch_inst.en
+arcabuco_tb.dut.inst_datapath.ifetch_inst.mux1_select
+@22
+arcabuco_tb.dut.inst_datapath.ifetch_inst.instruction[31:0]
+@23
+arcabuco_tb.dut.inst_datapath.inst_deco.regfile.regfile[1][31:0]
+[pattern_trace] 1
+[pattern_trace] 0

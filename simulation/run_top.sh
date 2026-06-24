@@ -14,11 +14,11 @@ done
 
 verilator --binary \
   -f file_list.txt \
-  --top arcabuco_datapath_tb \
+  --top arcabuco_tb \
   -Wno-TIMESCALEMOD -Wno-WIDTHEXPAND -Wno-fatal -Wno-SYMRSVDWORD\
   $TRACE_FLAG
   
-./obj_dir/Varcabuco_datapath_tb
+./obj_dir/Varcabuco_tb
 
 if $GUI; then
   gtkwave arcabuco_sim.vcd
